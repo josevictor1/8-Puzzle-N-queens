@@ -68,17 +68,29 @@ def busca(problema, enfileira):
 	@param enfileira: funcao de enfileiramento de nos
 	"""
 	nos = [No(problema.estado_inicial, None, None, 0, 0)] # criando uma fila com o estado inicial
-
+	print nos[0].estado
+	visitados = []
 	while (True):
 		if nos == []: return None # retorna fracasso caso a lista seja vazia
 
 		no = nos.pop(0)
-		visitados = []
+
 		# verifica se o estado atual e a meta
-		if problema.teste_meta(no.estado): return no.estado
+
+		if problema.teste_meta(no.estado):
+			print "resultado"
+			print problema.teste_meta(no.estado)
+			return no.estado
 		# caso nao seja a meta, o no e expandido
-		if not no in visitados:
-			nos = enfileira(nos, expande(no, problema))
-			visitados.append(no)
-			print(visitados)
-		print len(nos)
+		if not no.estado in visitados:
+			aux = expande(no, problema)
+			print "/////"
+			for i in aux:
+				print i.estado
+			print "/////"
+			nos = enfileira(aux,nos)
+			visitados.append(no.estado)
+			#for i in nos:
+				#print i.estado
+			#print(visitados)
+		#print len(nos)
