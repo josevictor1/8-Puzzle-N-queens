@@ -92,3 +92,39 @@ def busca(problema, enfileira):
 				#print i.estado
 			#print(visitados)
 		print len(nos)
+
+def tira_melhor(nos):
+	aux = nos[0]
+	for i in nos:
+		if aux.custo_caminho > i.custo_caminho:
+			aux = i 
+	nos.remove(aux)
+	return aux
+
+
+
+def buscagulosa(problema, enfileira):
+	"""
+	Funcao que realiza um algoritmo de busca. A estrategia de busca depende da
+	funcao enfileira passada como argumento. Ex: FIFO representa busca em largura
+	LIFO representa busca em profundidade.
+	@param problema: problema a ser resolvido
+	@param enfileira: funcao de enfileiramento de nos
+	"""
+	nos = [No(problema.estado_inicial, None, None, 0, 0)] # criando uma fila com o estado inicial
+	#print("Custo",nos[0].custo_caminho)
+	visitados = []
+	while (True):
+		if nos == []: return None # retorna fracasso caso a lista seja vazia
+		
+		no = tira_melhor(nos)
+		print no.custo_caminho
+		#print(problema.teste_meta(no.estado))
+		# verifica se o estado atual e a meta
+		if problema.teste_meta(no.estado): return no.estado
+		# caso nao seja a meta, o no e expandido
+		if not no.estado in visitados:
+			nos = enfileira(expande(no, problema), nos)
+			visitados.append(no.estado)
+			#print(visitados)
+		print len(nos)

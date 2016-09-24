@@ -142,22 +142,38 @@ def embaralha(tabuleiro,operadores):
 				#print tabuleiro["pecas"]
 	return tabuleiro
 
+def heuristica_desordenado(tabuleiro):
+	meta = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+	contador = 0
+	for i in range(3):
+		for j in range(3):
+			if meta[i][j] != tabuleiro["pecas"][i][j]:
+				contador = contador + 1 
+	return contador
+
+def heuristica_manhattan(tabuleiro):
+	meta = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+
+
 def main():
-	items = [8,2,5,1,0,7,4,6,3]      # items do tabuleiro
+	items = [1,2,3,4,5,6,7,8,0]      # items do tabuleiro
 	#random.shuffle(items) # embaralhando os items do tabuleiro
 	t = cria_tabuleiro(items) # criando o tabuleiro
 
 	operadores = [move_baixo, move_cima, move_direita, move_esquerda] # lista de operadores do problema
 	# instanciando o problema
-	#teste = embaralha(t,operadores)
+	teste = embaralha(t,operadores)
 	#print teste
-	problema = ia.Problema(t, operadores, teste_meta, funcao_custo)
-	#problema1 = ia.Problema(t, operadores, teste_meta, funcao_custo)
-	#busca em largura
-	#print "Saida:", ia.busca(problema, enfileira_fifo)
-	#busca em profundidade
+	
+	#Problemas:
+	problema = ia.Problema(teste, operadores, teste_meta, heuristica_desordenado)
+	#problema1 = ia.Problema(t, operadores, teste_meta, funcao_custo)	
+	
+	#Buscas:
+	
 	#print "Saida Busca em Largura:", ia.busca(problema, enfileira_fifo)
-	print "Saida Busca em Profundidade:", ia.busca(problema, enfileira_lifo)
+	#print "Saida Busca em Profundidade:", ia.busca(problema, enfileira_lifo)
+	print "Saida Busca Gulosa:", ia.buscagulosa(problema, enfileira_lifo)
 	return 0
 
 print "O programa executou com saida %d" % (main())

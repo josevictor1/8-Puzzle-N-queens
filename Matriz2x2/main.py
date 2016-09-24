@@ -153,6 +153,18 @@ def embaralha(tabuleiro,operadores):
 				#print tabuleiro["pecas"]
 	return tabuleiro
 
+def heuristica_desordenado(tabuleiro):
+	meta = [[1, 2], [3, 0]]
+	contador = 0
+	aux = tabuleiro["pecas"]
+	for i in range(2):
+		for j in range(2):
+			if meta[i][j] != aux[i][j]:
+				contador = contador + 1 
+	return contador
+
+
+
 def main():
 	#items = range(9)      # items do tabuleiro
 	#items = [1,2,3,4,0,6,7,5,8]
@@ -162,10 +174,12 @@ def main():
 	#print t["pecas"]
 	operadores = [move_baixo, move_cima, move_direita, move_esquerda] # lista de operadores do problema
 	teste = embaralha(t,operadores)
+	print teste
+	print heuristica_desordenado(teste)
 	#print teste["pecas"]
 	# instanciando o problema
-	problema = ia.Problema(teste, operadores, teste_meta, funcao_custo)
-	print "Saida:", ia.busca(problema, enfileira_fifo)
+	problema = ia.Problema(teste, operadores, teste_meta, heuristica_desordenado)
+	print "Saida:", ia.buscagulosa(problema, enfileira_fifo)
 
 	return 0
 
