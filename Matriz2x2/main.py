@@ -9,10 +9,10 @@ def cria_tabuleiro(items):
 	"""
 	tabuleiro = {}
 	# posicionando as pecas
-	tabuleiro["pecas"] = [[items[i * 3 + j] for j in range(3)] for i in range(3)]
+	tabuleiro["pecas"] = [[items[i * 2 + j] for j in range(2)] for i in range(2)]
 
-	for i in range(3):
-		for j in range(3):
+	for i in range(2):
+		for j in range(2):
 			# encontrando a peca "branca" para movimentar
 			if tabuleiro["pecas"][i][j] == 0:
 				tabuleiro["posicao"] = i, j
@@ -56,7 +56,7 @@ def move_direita(tabuleiro):
 	"""
 	i, j = tabuleiro["posicao"] # obtendo a linha e a coluna do tabuleiro atual
 
-	if j == 2: return None # caso nao de pra realizar nenhum movimento a partir daqui
+	if j == 1: return None # caso nao de pra realizar nenhum movimento a partir daqui
 
 	novo = {}
 	novo["pecas"] = [[elemento for elemento in linha] for linha in tabuleiro["pecas"]]
@@ -94,7 +94,7 @@ def move_baixo(tabuleiro):
 	"""
 	i, j = tabuleiro["posicao"] # obtendo a linha e a coluna do tabuleiro autal
 
-	if i == 2: return None
+	if i == 1: return None
 
 	novo = {}
 	novo["pecas"] = [[elemento for elemento in linha] for linha in tabuleiro["pecas"]]
@@ -121,15 +121,26 @@ def teste_meta(tabuleiro):
 	@param tabuleiro: estado atual do tabuleiro
 	@return true se o tabuleiro e a meta, false caso contrario
 	"""
-	return tabuleiro["pecas"] == [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+	#return tabuleiro["pecas"] == [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+	return tabuleiro["pecas"] == [[1,2],[3,0]]
 
 
 def enfileira_fifo(lista_1, lista_2):
 	return lista_2 + lista_1
 
-def enfileira_lifo(lista_1,lista_2):
-	return lista_1 + lista_2
 
+def enfileira_lifo(lista_1, lista_2):
+	return lista_1 + lista_2
+"""
+def embaralha(tabuleiro,operadores):
+	n = randint(1000,16000)
+
+	for i in range(n):
+		if operadores[n%4](tabuleiro) != None:
+			tabuleiro = operadores[n%4](tabuleiro)
+			print tabuleiro["pecas"]
+	return tabuleiro
+"""
 def embaralha(tabuleiro,operadores):
 	n = randint(1000,16000)
 	l = [0,1,2,3]
@@ -143,21 +154,19 @@ def embaralha(tabuleiro,operadores):
 	return tabuleiro
 
 def main():
-	items = [8,2,5,1,0,7,4,6,3]      # items do tabuleiro
+	#items = range(9)      # items do tabuleiro
+	#items = [1,2,3,4,0,6,7,5,8]
+	items = [1,2,3,0]
 	#random.shuffle(items) # embaralhando os items do tabuleiro
 	t = cria_tabuleiro(items) # criando o tabuleiro
-
+	#print t["pecas"]
 	operadores = [move_baixo, move_cima, move_direita, move_esquerda] # lista de operadores do problema
+	teste = embaralha(t,operadores)
+	#print teste["pecas"]
 	# instanciando o problema
-	#teste = embaralha(t,operadores)
-	#print teste
-	problema = ia.Problema(t, operadores, teste_meta, funcao_custo)
-	#problema1 = ia.Problema(t, operadores, teste_meta, funcao_custo)
-	#busca em largura
-	#print "Saida:", ia.busca(problema, enfileira_fifo)
-	#busca em profundidade
-	#print "Saida Busca em Largura:", ia.busca(problema, enfileira_fifo)
-	print "Saida Busca em Profundidade:", ia.busca(problema, enfileira_lifo)
+	problema = ia.Problema(teste, operadores, teste_meta, funcao_custo)
+	print "Saida:", ia.busca(problema, enfileira_fifo)
+
 	return 0
 
 print "O programa executou com saida %d" % (main())
