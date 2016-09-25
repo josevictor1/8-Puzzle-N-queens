@@ -131,7 +131,8 @@ def enfileira_lifo(lista_1,lista_2):
 	return lista_1 + lista_2
 
 def embaralha(tabuleiro,operadores):
-	n = randint(1000,16000)
+	random.seed()
+	n = randint(1000,10000)
 	l = [0,1,2,3]
 
 	for i in range(n):
@@ -140,6 +141,7 @@ def embaralha(tabuleiro,operadores):
 			if operadores[j](tabuleiro) != None:
 				tabuleiro = operadores[j](tabuleiro)
 				#print tabuleiro["pecas"]
+	tabuleiro = operadores[randint(0,3)](tabuleiro)
 	return tabuleiro
 
 def heuristica_desordenado(tabuleiro):
@@ -153,6 +155,18 @@ def heuristica_desordenado(tabuleiro):
 
 def heuristica_manhattan(tabuleiro):
 	meta = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+	soma = 0
+	#print tabuleiro["pecas"]
+	for i in range(3):
+		for j in range(3):
+			for k in range(3):
+				for l in range(3):
+					if meta[i][j] == tabuleiro["pecas"][k][l]:
+						soma = soma + abs(int(i - k)) + abs(int(j - l))
+						#print soma
+	return soma
+
+
 
 
 def main():
@@ -163,17 +177,25 @@ def main():
 	operadores = [move_baixo, move_cima, move_direita, move_esquerda] # lista de operadores do problema
 	# instanciando o problema
 	teste = embaralha(t,operadores)
+	print "Estado Inicial:",teste["pecas"]
+	#print heuristica_manhattan(teste)
 	#print teste
 	
 	#Problemas:
-	problema = ia.Problema(teste, operadores, teste_meta, heuristica_desordenado)
-	#problema1 = ia.Problema(t, operadores, teste_meta, funcao_custo)	
+	"""Sem heuristica:""" 
+	problema = ia.Problema(teste, operadores, teste_meta, funcao_custo)
+	"""Com heuristica:""" 
+	"""		Numero de pecas fora de posicao		"""
+	"""problema = ia.Problema(teste, operadores, teste_meta, heuristica_desordenado)"""  	
+	"""		Distancia de Manhattan		"""
+	"""problema = ia.Problema(teste, operadores, teste_meta, heuristica_manhattan)""" 
+
+	"""Buscas:""" 
 	
-	#Buscas:
-	
-	#print "Saida Busca em Largura:", ia.busca(problema, enfileira_fifo)
-	#print "Saida Busca em Profundidade:", ia.busca(problema, enfileira_lifo)
-	print "Saida Busca Gulosa:", ia.buscagulosa(problema, enfileira_lifo)
+	print "Saida Busca em Largura:", ia.busca(problema, enfileira_fifo)
+	"""print "Saida Busca em Profundidade:", ia.busca(problema, enfileira_lifo)""" 
+	"""print "Saida Busca Gulosa:", ia.buscagulosa(problema, enfileira_lifo)"""
+	"""print "Saida Busca A*:", ia.buscaaestrela(problema, enfileira_lifo)""" 
 	return 0
 
 print "O programa executou com saida %d" % (main())

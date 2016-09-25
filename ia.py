@@ -77,6 +77,25 @@ def expande1(no, problema):
 	# retornando o conjunto resultante da expansao
 	return filhos
 
+def expande2(no, problema):
+	"""
+	Funcao que expande um no e gera um conjunto de filhos. Essa eh a versao alternativa para a busca gulosa.
+	@param no: no atual a ser expandido
+	@param problema: problema no qual o no se encontra
+	"""
+	filhos = [] # conjunto de filhos gerados por um determinado no
+
+	for operacao in problema.operadores:
+		resultado = operacao(no.estado)
+
+		# se o no produz algum filho, entao coloque ele no conjunto de filhos
+		if not resultado is None:
+			# criando um novo no a partir da expansao do no atual
+			filhos.append(No(resultado, operacao, no, no.profundidade + 1,no.profundidade + 1 + problema.funcao_custo(resultado)))
+
+	# retornando o conjunto resultante da expansao
+	return filhos
+
 
 
 def busca(problema, enfileira):
@@ -134,6 +153,31 @@ def buscagulosa(problema, enfileira):
 		# caso nao seja a meta, o no e expandido
 		if not no.estado in visitados:
 			nos = enfileira(expande1(no, problema), nos)
+			visitados.append(no.estado)
+			#print(visitados)
+		#print len(nos)
+
+def buscaaestrela(problema, enfileira):
+	"""
+	Funcao que realiza um algoritmo de busca. A estrategia de busca depende da
+	funcao enfileira passada como argumento. Ex: FIFO representa busca em largura
+	LIFO representa busca em profundidade.
+	@param problema: problema a ser resolvido
+	@param enfileira: funcao de enfileiramento de nos
+	"""
+	nos = [No(problema.estado_inicial, None, None, 0, 0)] # criando uma fila com o estado inicial
+	visitados = []
+	while (True):
+		if nos == []: return None # retorna fracasso caso a lista seja vazia
+		
+		no = tira_melhor(nos)
+		#print no.custo_caminho
+		#print(problema.teste_meta(no.estado))
+		# verifica se o estado atual e a meta
+		if problema.teste_meta(no.estado): return no.estado
+		# caso nao seja a meta, o no e expandido
+		if not no.estado in visitados:
+			nos = enfileira(expande2(no, problema), nos)
 			visitados.append(no.estado)
 			#print(visitados)
 		#print len(nos)
