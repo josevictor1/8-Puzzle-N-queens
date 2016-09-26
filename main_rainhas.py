@@ -2,6 +2,7 @@ import ia
 from random import *
 import random
 
+""""
 def cria_tabuleiro(n):
     tabuleiro = {}
     random.seed()
@@ -20,8 +21,7 @@ def cria_tabuleiro(n):
                 tabuleiro["posicao"].append([x,i])
                 
     return tabuleiro
-
-
+"""
 
 def main():
     t = cria_tabuleiro(4) 
