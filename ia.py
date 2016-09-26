@@ -79,7 +79,7 @@ def expande1(no, problema):
 
 def expande2(no, problema):
 	"""
-	Funcao que expande um no e gera um conjunto de filhos. Essa eh a versao alternativa para a busca gulosa.
+	Funcao que expande um no e gera um conjunto de filhos. Essa eh a versao alternativa para a busca A*.
 	@param no: no atual a ser expandido
 	@param problema: problema no qual o no se encontra
 	"""
