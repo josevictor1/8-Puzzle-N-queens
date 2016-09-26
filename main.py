@@ -1,6 +1,7 @@
 import ia
 from random import *
 import random
+
 def cria_tabuleiro(items):
 	"""
 	Funcao que cria um tabuleiro novo para ser resolvido pelos algoritmos inteligentes
