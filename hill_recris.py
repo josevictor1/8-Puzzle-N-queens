@@ -1,6 +1,9 @@
 import ia
 import random
 import copy
+import math
+
+euler = math.exp(1)
 
 def cria_tabuleiro(pecas,rainhas):
     """
@@ -102,14 +105,34 @@ def monta_tabuleiro(tabuleiro):
 
     return tabuleiro
 
-def recristalinizacao(tabuleiro):
-    pass
+def recristalizacao(tabuleiro):
+    corrente = tabuleiro
+    t = 400
+    while(True):
 
+        random.seed()
+        randomico1 = random.randint(0,len(tabuleiro["rainhas"]) - 1)
+        randomico2 = random.randint(0,len(tabuleiro["rainhas"]) - 1)
 
+        if t == 0 or corrente ["conflitos"] == 0:
+            return corrente
+        expande(corrente)
+        proximo =  corrente["filhos"][randomico1]
+        delta_e = proximo["conflitos"] - corrente["conflitos"]
+
+        print "executou", delta_e
+
+        if delta_e > 0:
+            print "passou"
+            if euler < math.exp(delta_e/t):
+                while randomico1 == randomico2:
+                    randomico2 = random.randint(0,len(tabuleiro["rainhas"]) - 1)
+                corrente = corrente["filhos"][randomico2]
+            t = t - 1
 
 
 def main():
-    n = 40
+    n = 8
     l = []
     pecas = [[0 for i in range(n)] for j in range(n)]
     for i in range(n):
@@ -125,8 +148,8 @@ def main():
         print i
     print tabuleiro["conflitos"]
 
-    r = subida_de_encosta(tabuleiro)
-
+    #r = subida_de_encosta(tabuleiro)
+    r = recristalizacao(tabuleiro)
     r = monta_tabuleiro(r)
     print "rainhas",r["rainhas"]
     for i in r["pecas"]:
