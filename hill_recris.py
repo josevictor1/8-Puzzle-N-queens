@@ -111,24 +111,32 @@ def recristalizacao(tabuleiro):
     while(True):
 
         random.seed()
-        randomico1 = random.randint(0,len(tabuleiro["rainhas"]) - 1)
-        randomico2 = random.randint(0,len(tabuleiro["rainhas"]) - 1)
-
-        if t == 0 or corrente ["conflitos"] == 0:
-            return corrente
         expande(corrente)
-        proximo =  corrente["filhos"][randomico1]
+        randomico1 = random.randint(0,len(corrente["filhos"]) - 1)
+        randomico2 = random.randint(0,len(corrente["filhos"]) - 1)
+
+        if t == 0:
+            t = 400  
+
+        if corrente ["conflitos"] == 0:
+            print corrente["rainhas"]
+            return corrente
+
+        proximo = corrente["filhos"][randomico1]
         delta_e = proximo["conflitos"] - corrente["conflitos"]
 
         print "executou", delta_e
 
-        if delta_e > 0:
-            print "passou"
-            if euler < math.exp(delta_e/t):
+        if delta_e < 0:
+            corrente = proximo
+        else:
+            if euler < euler**(delta_e/t):
                 while randomico1 == randomico2:
-                    randomico2 = random.randint(0,len(tabuleiro["rainhas"]) - 1)
+                    randomico2 = random.randint(0,len(corrente["filhos"]) - 1)
                 corrente = corrente["filhos"][randomico2]
-            t = t - 1
+
+            else:
+                t = t - 1
 
 
 def main():
@@ -150,6 +158,8 @@ def main():
 
     #r = subida_de_encosta(tabuleiro)
     r = recristalizacao(tabuleiro)
+    print r["rainhas"]
+
     r = monta_tabuleiro(r)
     print "rainhas",r["rainhas"]
     for i in r["pecas"]:
