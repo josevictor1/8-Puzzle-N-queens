@@ -1,6 +1,9 @@
 import ia
 from random import *
 import random
+import time
+
+comparacoes = 0
 
 def cria_tabuleiro(items):
 	"""
@@ -122,6 +125,7 @@ def teste_meta(tabuleiro):
 	@param tabuleiro: estado atual do tabuleiro
 	@return true se o tabuleiro e a meta, false caso contrario
 	"""
+
 	return tabuleiro["pecas"] == [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
 
 
@@ -151,7 +155,7 @@ def heuristica_desordenado(tabuleiro):
 	for i in range(3):
 		for j in range(3):
 			if meta[i][j] != tabuleiro["pecas"][i][j]:
-				contador = contador + 1 
+				contador = contador + 1
 	return contador
 
 def heuristica_manhattan(tabuleiro):
@@ -171,32 +175,88 @@ def heuristica_manhattan(tabuleiro):
 
 
 def main():
-	items = [1,2,3,4,5,6,7,8,0]      # items do tabuleiro
+	items = [4,1,3,2,6,8,7,5,0]      # items do tabuleiro
 	#random.shuffle(items) # embaralhando os items do tabuleiro
-	t = cria_tabuleiro(items) # criando o tabuleiro
+	teste1 = cria_tabuleiro(items) # criando o tabuleiro
 
 	operadores = [move_baixo, move_cima, move_direita, move_esquerda] # lista de operadores do problema
 	# instanciando o problema
-	teste = embaralha(t,operadores)
-	print "Estado Inicial:",teste["pecas"]
-	#print heuristica_manhattan(teste)
-	#print teste
-	
-	#Problemas:
-	"""Sem heuristica:""" 
-	problema = ia.Problema(teste, operadores, teste_meta, funcao_custo)
-	"""Com heuristica:""" 
-	"""		Numero de pecas fora de posicao		"""
-	"""problema = ia.Problema(teste, operadores, teste_meta, heuristica_desordenado)"""  	
-	"""		Distancia de Manhattan		"""
-	"""problema = ia.Problema(teste, operadores, teste_meta, heuristica_manhattan)""" 
+	#teste = embaralha(t,operadores)
 
-	"""Buscas:""" 
-	
-	print "Saida Busca em Largura:", ia.busca(problema, enfileira_fifo)
-	"""print "Saida Busca em Profundidade:", ia.busca(problema, enfileira_lifo)""" 
+	#teste1 = [[1,2,3],[4,0,6],[7,5,8]]
+
+	#Problemas:
+	"""Sem heuristica:"""
+	#largura
+	problema = ia.Problema(teste1, operadores, teste_meta, funcao_custo)
+	#profundiade
+	problema1 = ia.Problema(teste1, operadores, teste_meta, funcao_custo)
+	#gulosa
+	problema2 = ia.Problema(teste1, operadores, teste_meta, heuristica_desordenado)
+	#A* desordenado
+	problema3 = ia.Problema(teste1, operadores, teste_meta, heuristica_desordenado)
+	#A* Manhattan
+	problema4 = ia.Problema(teste1, operadores, teste_meta, heuristica_manhattan)
+
+	ini = time.time()
+	resultado = ia.busca(problema, enfileira_fifo)
+	fim = time.time()
+	ini1 = time.time()
+	resultado1 = ia.busca(problema1, enfileira_lifo)
+	fim1 = time.time()
+	ini2 = time.time()
+	resultado2 = ia.buscagulosa(problema2, enfileira_lifo)
+	fim2 = time.time()
+	ini3 = time.time()
+	resultado3 = ia.buscaaestrela(problema3, enfileira_lifo)
+	fim3 = time.time()
+	ini4 = time.time()
+	resultado4 = ia.buscaaestrela(problema4, enfileira_lifo)
+	fim4 = time.time()
+
+	print "Busca em Largura"
+	print "Estado Inicial:",teste1["pecas"]
+	print "Saida Busca em Largura: ", resultado
+	print "Tempo: ", fim - ini
+	print "Numero de comparacoes: ", problema.comparacoes
+	print "-------------------------------------------------"
+	print "Busca em Profundiade"
+	print "Estado Inicial:",teste1["pecas"]
+	print "Saida Busca em Largura: ", resultado1
+	print "Tempo: ", fim1 - ini1
+	print "Numero de comparacoes: ", problema1.comparacoes
+	print "-------------------------------------------------"
+	print "Busca em Gulosa"
+	print "Estado Inicial:",teste1["pecas"]
+	print "Saida Busca em Largura: ", resultado2
+	print "Tempo: ", fim2 - ini2
+	print "Numero de comparacoes: ", problema2.comparacoes
+	print "-------------------------------------------------"
+	print "Busca A* numero de pessas fora do lugar"
+	print "Estado Inicial:",teste1["pecas"]
+	print "Saida Busca em Largura: ", resultado3
+	print "Tempo: ", fim3 - ini3
+	print "Numero de comparacoes: ", problema3.comparacoes
+	print "-------------------------------------------------"
+	print "Busca A* Distancia de Manhattan"
+	print "Estado Inicial:",teste1["pecas"]
+	print "Saida Busca em Largura: ", resultado4
+	print "Tempo: ", fim4 - ini4
+	print "Numero de comparacoes: ", problema4.comparacoes
+	print "-------------------------------------------------"
+
+	"""Com heuristica:"""
+	"""		Numero de pecas fora de posicao		"""
+	"""problema = ia.Problema(teste, operadores, teste_meta, heuristica_desordenado)"""
+	"""		Distancia de Manhattan		"""
+	"""problema = ia.Problema(teste, operadores, teste_meta, heuristica_manhattan)"""
+
+	"""Buscas:"""
+
+
+	"""print "Saida Busca em Profundidade:", ia.busca(problema, enfileira_lifo)"""
 	"""print "Saida Busca Gulosa:", ia.buscagulosa(problema, enfileira_lifo)"""
-	"""print "Saida Busca A*:", ia.buscaaestrela(problema, enfileira_lifo)""" 
+	"""print "Saida Busca A*:", ia.buscaaestrela(problema, enfileira_lifo)"""
 	return 0
 
 print "O programa executou com saida %d" % (main())

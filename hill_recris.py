@@ -2,6 +2,8 @@ import ia
 import random
 import copy
 import math
+import time
+import numpy as np
 
 euler = math.exp(1)
 
@@ -43,11 +45,8 @@ def heuristica(l):
     for i in range(h):
         for j in range(h):
             if i != j and (l[i] - i == l[j] - j or l[i] + i == l[j] + j):
-               #print i , j
+
                 soma = soma + 1
-                #print soma
-                #print "primeira", l[i],i
-                #print "segunda", l[j],j
 
     return soma
 
@@ -58,16 +57,13 @@ def expande(tabuleiro):
 
     for i in range(len(tabuleiro["rainhas"]) - 1):
         for j in range(i + 1,len(tabuleiro["rainhas"])):
-                #print i,j
+
                 t = cria_tabuleiro([],[])
                 t["rainhas"] = tabuleiro["rainhas"][:]
-                #t["rainhas"] = copy.copy(tabuleiro["rainhas"])
-                #t["pecas"] = tabuleiro["pecas"][:][:]
                 aux = t["rainhas"][i]
                 t["rainhas"][i] = t["rainhas"][j]
                 t["rainhas"][j] = aux
                 t["conflitos"] = heuristica(t["rainhas"])
-                #print  t["rainhas"] , "conflitos" , t["conflitos"]
                 tabuleiro["filhos"].append(t)
 
 
@@ -76,25 +72,28 @@ def melhorfilho(tabuleiro):
     for i in tabuleiro["filhos"]:
         if aux["conflitos"] > i["conflitos"]:
             aux = i
-    print "verifica melhot", aux["conflitos"]
 
     return aux
 
 
-def subida_de_encosta(tabuleiro):
-
+def subida_da_encosta(tabuleiro):
+    i = 0
     corrente = tabuleiro
 
     while(True):
         expande(corrente)
         proximo = melhorfilho(corrente)
-        #print proximo["conflitos"]
         if proximo["conflitos"] > corrente["conflitos"] or corrente["conflitos"] == 0:
-            #print "conflitos" ,corrente["conflitos"]
-            print corrente["rainhas"]
             return corrente
         corrente = proximo
-        #print "conflitos" ,corrente["conflitos"]
+
+        if corrente["conflitos"] == 2 and i < 15:
+            i = i + 1
+        elif corrente["conflitos"] == 2 and i == 15:
+            embaralha(tabuleiro)
+            tabuleiro["conflitos"] = heuristica(tabuleiro["rainhas"])
+            corrente = tabuleiro
+
 
 
 def monta_tabuleiro(tabuleiro):
@@ -107,25 +106,21 @@ def monta_tabuleiro(tabuleiro):
 
 def recristalizacao(tabuleiro):
     corrente = tabuleiro
-    t = 400
+    t = 100 * len(tabuleiro["rainhas"])
     while(True):
-
         random.seed()
         expande(corrente)
         randomico1 = random.randint(0,len(corrente["filhos"]) - 1)
         randomico2 = random.randint(0,len(corrente["filhos"]) - 1)
 
         if t == 0:
-            t = 400  
+            t = 100 * len(tabuleiro["rainhas"])
 
         if corrente ["conflitos"] == 0:
-            print corrente["rainhas"]
             return corrente
 
         proximo = corrente["filhos"][randomico1]
         delta_e = proximo["conflitos"] - corrente["conflitos"]
-
-        print "executou", delta_e
 
         if delta_e < 0:
             corrente = proximo
@@ -134,13 +129,14 @@ def recristalizacao(tabuleiro):
                 while randomico1 == randomico2:
                     randomico2 = random.randint(0,len(corrente["filhos"]) - 1)
                 corrente = corrente["filhos"][randomico2]
-
             else:
                 t = t - 1
 
-
 def main():
-    n = 8
+    n = 0
+    while(n < 4):
+        n = input("Digite o numero de rainhas(lembrando que o numero devera ser maior que 3): ")
+
     l = []
     pecas = [[0 for i in range(n)] for j in range(n)]
     for i in range(n):
@@ -152,21 +148,42 @@ def main():
 
     embaralha(tabuleiro)
     tabuleiro["conflitos"] = heuristica(tabuleiro["rainhas"])
+    print "Estado inicial"
     for i in tabuleiro["pecas"]:
         print i
-    print tabuleiro["conflitos"]
+    print "Conflitos:", tabuleiro["conflitos"]
 
-    #r = subida_de_encosta(tabuleiro)
+    ini1 = time.time()
+    s = subida_da_encosta(tabuleiro)
+    fim1 = time.time()
+
+    ini2 = time.time()
     r = recristalizacao(tabuleiro)
-    print r["rainhas"]
+    fim2 = time.time()
 
+
+    s = monta_tabuleiro(s)
     r = monta_tabuleiro(r)
+
+    print "Subida da encosta:"
+    print "Solucao:"
+    print "rainhas",s["rainhas"]
+    for i in s["pecas"]:
+        print i
+    print "Conflitos:", heuristica(s["rainhas"])
+    print "Tempo:", fim1 - ini1
+
+    print "\n------------------------------------------------------------------\n"
+
+
+    print "Recristalizacao Simulada:"
+    print "Solucao:"
     print "rainhas",r["rainhas"]
     for i in r["pecas"]:
         print i
-    print "heuristica", heuristica(r["rainhas"])
-    #for i in r["pecas"]:
-    #  print i
+    print "Conflitos", heuristica(r["rainhas"])
+    print "Tempo:" ,fim2 - ini2
+
 
     return 0
 

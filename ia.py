@@ -17,7 +17,7 @@ class Problema:
 		self.operadores = operadores
 		self.teste_meta = teste_meta
 		self.funcao_custo = funcao_custo
-
+		self.comparacoes = 0
 
 class No:
 	# para realizar o algoritmo de busca em arvore, devemos ter o tipo no. O tipo abstrato
@@ -99,6 +99,7 @@ def expande2(no, problema):
 
 
 def busca(problema, enfileira):
+	c = 0
 	"""
 	Funcao que realiza um algoritmo de busca. A estrategia de busca depende da
 	funcao enfileira passada como argumento. Ex: FIFO representa busca em largura
@@ -114,6 +115,8 @@ def busca(problema, enfileira):
 		no = nos.pop(0)
 		#print(problema.teste_meta(no.estado))
 		# verifica se o estado atual e a meta
+		c = c + 1
+		problema.comparacoes = c
 		if problema.teste_meta(no.estado): return no.estado
 		# caso nao seja a meta, o no e expandido
 		if not no.estado in visitados:
@@ -126,13 +129,14 @@ def tira_melhor(nos):
 	aux = nos[0]
 	for i in nos:
 		if aux.custo_caminho > i.custo_caminho:
-			aux = i 
+			aux = i
 	nos.remove(aux)
 	return aux
 
 
 
 def buscagulosa(problema, enfileira):
+	c = 0
 	"""
 	Funcao que realiza um algoritmo de busca. A estrategia de busca depende da
 	funcao enfileira passada como argumento. Ex: FIFO representa busca em largura
@@ -144,20 +148,23 @@ def buscagulosa(problema, enfileira):
 	visitados = []
 	while (True):
 		if nos == []: return None # retorna fracasso caso a lista seja vazia
-		
+
 		no = tira_melhor(nos)
 		#print no.custo_caminho
 		#print(problema.teste_meta(no.estado))
 		# verifica se o estado atual e a meta
+		c = c + 1
+		problema.comparacoes = c
 		if problema.teste_meta(no.estado): return no.estado
 		# caso nao seja a meta, o no e expandido
 		if not no.estado in visitados:
 			nos = enfileira(expande1(no, problema), nos)
 			visitados.append(no.estado)
-			#print(visitados)
-		#print len(nos)
+
+
 
 def buscaaestrela(problema, enfileira):
+	c = 0
 	"""
 	Funcao que realiza um algoritmo de busca. A estrategia de busca depende da
 	funcao enfileira passada como argumento. Ex: FIFO representa busca em largura
@@ -169,11 +176,13 @@ def buscaaestrela(problema, enfileira):
 	visitados = []
 	while (True):
 		if nos == []: return None # retorna fracasso caso a lista seja vazia
-		
+
 		no = tira_melhor(nos)
 		#print no.custo_caminho
 		#print(problema.teste_meta(no.estado))
 		# verifica se o estado atual e a meta
+		c = c + 1
+		problema.comparacoes = c
 		if problema.teste_meta(no.estado): return no.estado
 		# caso nao seja a meta, o no e expandido
 		if not no.estado in visitados:
