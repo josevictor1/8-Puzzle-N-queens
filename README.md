@@ -6,3 +6,8 @@ Quebra cabeça de 8 peças. Resolução utilizando os seguintes algoritmos:
 - Busca Gulosa
 - A*(heurística utilizando distância de manhattan)
 - A*(hurística  utilizando desorganização das peças)
+
+N - Rainhas. Resolução utilizando os seguintes algoritmos:
+
+- Hill Cimbing
+- Simulated Annealing
